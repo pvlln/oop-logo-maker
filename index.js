@@ -27,39 +27,38 @@ const questions = [
     {
         type: 'input',
         message: 'Please enter a color for your shape: ',
-        name: 'shapeColor'
+        name: 'fillColor'
     },
 ]
 
 const {
-    triangle,
-    circle,
-    rectangle} = require('./lib/shapes');
+    Triangle,
+    Circle,
+    Rectangle} = require('./lib/shapes');
 // format user data
-function formatData(data){
+function formatData({shape, fillColor, txt, txtColor}){
+    var shapeClass;
 
+    switch (shape) {
+        case 'triangle':
+            shapeClass = Triangle
+            break;
+        case 'circle':
+            shapeClass = Circle
+            break;
+        case 'rectangle':
+            shapeClass = Rectangle
+            break;
+    }
+
+    return new shapeClass(fillColor, txt, txtColor).render();
 };
-// render svg file content
-function renderSVG(design) {
-    svgString = '<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">';
-    // if (design.shape === 'triangle'){
-
-    // } else if(design.shape === 'circle'){
-
-    // }else if(design.shape === 'rectangle'){
-
-    // }else{
-    //     return console.error('Invalid shape');
-    // }
-    svgString += '</svg>';
-    return svgString;
-}
 
 // write svg content to file
 function writeToFile(data){
 // call rendersvg to render the svg file contents
-    const svgContent = renderSVG(data);
-    fs.writeFile(data.filename, svgContent,(err) =>
+    const svgContent = formatData(data);
+    fs.writeFile(`./examples/${data.filename}.svg`, svgContent,(err) =>
     err ? console.error(err) : console.log("Your file was successfully created in the examples folder.") )
 }
 
